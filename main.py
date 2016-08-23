@@ -23,7 +23,8 @@ class Index(webapp2.RequestHandler):
     def get(self):
         input_form = """
         <p>Enter the message you want to encrypt and how
-        you wish to encrypt it.</p>
+        you wish to encrypt it. If no rotation specified
+        it will default to 13.</p>
         <form action = "/input" method = "post">
             <label>
                 Message:
@@ -34,27 +35,34 @@ class Index(webapp2.RequestHandler):
                 <input type = "number" name = "rot"/>
             <label>
         </form>
-        <input type = "submit" value = "Caesar"/>
-        <input type = "submit" value = "Rot 13"/>
+        <input type = "submit" value = "Rotate"/>
         """
 
         response = page_header + input_form + page_footer
         self.response.write(response)
 
-class caesarFunc(webapp2.RequestHandler):
+class rotate(webapp2.RequestHandler):
 
     def post(self):
-        mess = self.request.get("message")
-        rot = self.request.get("rot")
+        mess = str(self.request.get("message"))
+        rot = int(self.request.get("rot"))
         new_mess = encrypt(mess,rot)
 
-        output = """
-        The old message was: """ + mess + """ and the new message is: """ + new_mess
+        if rot:
+            rot = 13
 
-        response = page_header + new_mess + page_footer
+        if mess:
+            error = "Message is empty, please enter a message to encrpt"
+
+        output = 'The old message was: ' + mess '<p>The new message is: ' + new_mess +'</p>'
+
+        if not error:
+            response = page_header + error + page_footer
+        response = page_header + output +
+
         self.response.write(response)
 
 app = webapp2.WSGIApplication([
     ('/', Index),
-    ('/caesar', caesarFunc)
+    ('/input', rotate)
 ], debug=True)
