@@ -44,14 +44,14 @@ class Index(webapp2.RequestHandler):
 class caesarFunc(webapp2.RequestHandler):
 
     def post(self):
-        mess = str(self.request.get("message"))
-        rot = int(self.request.get("rot"))
+        mess = self.request.get("message")
+        rot = self.request.get("rot")
         new_mess = encrypt(mess,rot)
 
         output = """
         The old message was: """ + mess + """ and the new message is: """ + new_mess
 
-        response = page_header + output + page_footer
+        response = page_header + new_mess + page_footer
         self.response.write(response)
 
 app = webapp2.WSGIApplication([
