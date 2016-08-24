@@ -23,8 +23,7 @@ class Index(webapp2.RequestHandler):
     def get(self):
         input_form = """
         <p>Enter the message you want to encrypt and how
-        you wish to encrypt it. If no rotation specified
-        it will default to 13.</p>
+        you wish to encrypt it.</p>
         <form action = "/input" method = "post">
             <label>
                 Message:
@@ -33,9 +32,17 @@ class Index(webapp2.RequestHandler):
             <label>
                 Rotation Amount:
                 <input type = "number" name = "rot"/>
-            <label>
-        </form>
+            </label>
+        <label>
+        Rot 13
+        <input type = "radio" name = "rot_type" value = "rot13"/>
+        </label>
+        <label>
+        Caesar
+        <input type = "radio" name = "rot_type" value = "caesar"/>
+        </label>
         <input type = "submit" value = "Rotate"/>
+        </form>
         """
 
         response = page_header + input_form + page_footer
@@ -46,20 +53,20 @@ class rotate(webapp2.RequestHandler):
     def post(self):
         mess = str(self.request.get("message"))
         rot = int(self.request.get("rot"))
-        new_mess = encrypt(mess,rot)
+        new_mess = ""
 
-        if rot:
-            rot = 13
+        rotType = self.request.get("rot_type")
 
-        if mess:
-            error = "Message is empty, please enter a message to encrpt"
+        if rotType == "caesar":
+            new_mess = encrypt(mess,rot)
+        if rotType == "rot13" or rot:
+            new_mess = encrypt(mess,13)
 
-        output = 'The old message was: ' + mess '<p>The new message is: ' + new_mess +'</p>'
+        output = """
+        The old message was: """ + mess + """<p> and the new message is: """ + new_mess
+        + ""</p 
 
-        if not error:
-            response = page_header + error + page_footer
-        response = page_header + output +
-
+        response = page_header + output + page_footer
         self.response.write(response)
 
 app = webapp2.WSGIApplication([
