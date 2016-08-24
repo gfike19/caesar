@@ -63,7 +63,7 @@ class rotate(webapp2.RequestHandler):
         if rotType == "rt":
             rot = 13
             mess = str(self.request.get("message"))
-            new_mess = encrypt(mess, rot)
+        new_mess = encrypt(mess, rot)
 
         output = """The old message was: """ + mess + """ and the new message is: """ + new_mess
 
