@@ -20,6 +20,7 @@ page_footer = """
 
 class Index(webapp2.RequestHandler):
     #get paramters
+    #the /input needs to go in the tuple at the end
     def get(self):
         input_form = """
         <p>Enter the message you want to encrypt and how
@@ -31,16 +32,15 @@ class Index(webapp2.RequestHandler):
             </label>
             <label>
                 Rotation Amount:
-                <input type = "number" name = "rot"/>
+                <input type = "digit" name = "rotation"/>
             </label>
-        <label>
-        Rot 13
-        <input type = "radio" name = "rot_type" value = "rot13"/>
-        </label>
-        <label>
-        Caesar
-        <input type = "radio" name = "rot_type" value = "caesar"/>
-        </label>
+            <label>
+            Rotation Type:
+            <label> Caesar</label>
+            <input type = "radio" name = "rot_type" value = "Caesar"/>
+            <label> Rot 13</label>
+            <input type = "radio" name = "rot_type" value = "Rot 13"/>
+            </label>
         <input type = "submit" value = "Rotate"/>
         </form>
         """
@@ -52,19 +52,20 @@ class rotate(webapp2.RequestHandler):
 
     def post(self):
         mess = str(self.request.get("message"))
-        rot = int(self.request.get("rot"))
-        new_mess = ""
+        rot = int(self.request.get("rotation"))
+        new_mess = encrypt(mess,rot)
 
-        rotType = self.request.get("rot_type")
+        rotType = str(self.request.get("rot_type"))
 
-        if rotType == "caesar":
+        if not rot:
+            rot = 13
+
+        if rotType == "Caesar":
             new_mess = encrypt(mess,rot)
-        if rotType == "rot13" or rot:
+        if rotType == "Rot 13":
             new_mess = encrypt(mess,13)
 
-        output = """
-        The old message was: """ + mess + """<p> and the new message is: """ + new_mess
-        + ""</p 
+        output = """The old message was: """ + mess + """ and the new message is: """ + new_mess
 
         response = page_header + output + page_footer
         self.response.write(response)
