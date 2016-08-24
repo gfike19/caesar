@@ -32,16 +32,19 @@ class Index(webapp2.RequestHandler):
             </label>
             <label>
                 Rotation Amount:
-                <input type = "digit" name = "rotation"/>
+                <input type = "number" name = "rotation"/>
             </label>
             <label>
-            Rotation Type:
-            <label> Caesar</label>
-            <input type = "radio" name = "rot_type" value = "Caesar"/>
-            <label> Rot 13</label>
-            <input type = "radio" name = "rot_type" value = "Rot 13"/>
+            <p>Rotation Type:</p>
+            <label><p>Caesar
+                <input type = "radio" name = "rot_type" value = "c"/>
             </label>
-        <input type = "submit" value = "Rotate"/>
+            <label> Rot 13
+                    <input type = "radio" name = "rot_type" value = "rt"/>
+            </label>
+            </p>
+            <input type = "submit" value = "Encrypt"/>
+            </label>
         </form>
         """
 
@@ -51,19 +54,16 @@ class Index(webapp2.RequestHandler):
 class rotate(webapp2.RequestHandler):
 
     def post(self):
-        mess = str(self.request.get("message"))
-        rot = int(self.request.get("rotation"))
-        new_mess = encrypt(mess,rot)
-
         rotType = str(self.request.get("rot_type"))
 
-        if not rot:
-            rot = 13
 
-        if rotType == "Caesar":
-            new_mess = encrypt(mess,rot)
-        if rotType == "Rot 13":
-            new_mess = encrypt(mess,13)
+        if rotType == "c":
+            mess = str(self.request.get("message"))
+            rot = int(self.request.get("rotation"))
+        if rotType == "rt":
+            rot = 13
+            mess = str(self.request.get("message"))
+            new_mess = encrypt(mess, rot)
 
         output = """The old message was: """ + mess + """ and the new message is: """ + new_mess
 
