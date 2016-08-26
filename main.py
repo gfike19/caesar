@@ -58,11 +58,11 @@ class rotate(webapp2.RequestHandler):
 
 
         if rotType == "c":
-            mess = str(self.request.get("message"))
+            mess = cgi.escape(str(self.request.get("message")), quote = "True")
             rot = int(self.request.get("rotation"))
         if rotType == "rt":
             rot = 13
-            mess = str(self.request.get("message"))
+            mess = cgi.escape(str(self.request.get("message")), quote = "True")
         new_mess = encrypt(mess, rot)
 
         output = """The old message was: """ + mess + """ and the new message is: """ + new_mess
